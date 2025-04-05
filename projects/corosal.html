@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Carousel</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ccd1d9;
+            overflow: hidden;
+        }
+        .carousel {
+            overflow: hidden;
+            width: 80%;
+            display: flex;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .image-container {
+            display: flex;
+            width: max-content;
+            animation: scroll 350s linear infinite;
+        }
+        .image-container img {
+            border: 5px solid black;
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-right: 20px; /* Added gap between images */
+        }
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 1024px) {
+    .image-container img {
+        width: 160px;
+        margin-right: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .image-container img {
+        width: 120px;
+        margin-right: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-container img {
+        width: 100px;
+        margin-right: 10px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="carousel">
+        <div class="image-container">
+            <img src="../imgs/c1.jpg" alt="Image 1">
+            <img src="../imgs/c2.jpg" alt="Image 2">
+            <img src="../imgs/c3.jpg" alt="Image 3">
+            <img src="../imgs/c4.jpg" alt="Image 4">
+            <img src="../imgs/c5.jpg" alt="Image 5">
+            <img src="../imgs/c6.jpg" alt="Image 6">
+            <img src="../imgs/c7.jpg" alt="Image 7">
+            <img src="../imgs/c8.jpg" alt="Image 8">
+            <img src="../imgs/c9.jpg" alt="Image 9">
+            <img src="../imgs/c10.jpg" alt="Image 10">
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.querySelector(".image-container");
+            const images = Array.from(document.querySelectorAll(".image-container img"));
+            
+            // Clone images 10 times for a perfect loop
+            for (let i = 0; i < 50; i++) {
+                images.forEach(img => {
+                    let clone = img.cloneNode(true);
+                    container.appendChild(clone);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

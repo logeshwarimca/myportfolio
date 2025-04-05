@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Password Generator 🔒</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgb(14, 14, 14);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #password {
+            width: 85%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .copy-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #00f2fe;
+        }
+
+        .options {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .options label {
+            display: block;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        #generate-btn {
+            background: #c5e943;
+            color: rgb(18, 0, 0);
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        #generate-btn:hover {
+            background: #38f9d7;
+        }
+
+        #copy-message {
+            color: #4caf50;
+            margin-top: 10px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .input-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #password {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .copy-btn {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .options label {
+        font-size: 13px;
+    }
+
+    #generate-btn {
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .options label {
+        font-size: 12px;
+    }
+
+    #generate-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .copy-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🔐 Password Generator</h1>
+        <div class="input-container">
+            <input type="text" id="password" readonly placeholder="Your Secure Password" />
+            <button class="copy-btn" onclick="copyPassword()">📋</button>
+        </div>
+
+        <!-- Options for password customization -->
+        <div class="options">
+            <label>
+                <input type="checkbox" id="include-lowercase" checked />
+                Include Lowercase (a-z)
+            </label>
+            <label>
+                <input type="checkbox" id="include-uppercase" checked />
+                Include Uppercase (A-Z)
+            </label>
+            <label>
+                <input type="checkbox" id="include-numbers" checked />
+                Include Numbers (0-9)
+            </label>
+            <label>
+                <input type="checkbox" id="include-symbols" checked />
+                Include Symbols (!@#$%^&*)
+            </label>
+            <label>
+                Password Length:
+                <input type="number" id="length" value="12" min="6" max="50" />
+            </label>
+        </div>
+
+        <!-- Generate Button -->
+        <button id="generate-btn" onclick="generatePassword()">Generate Password</button>
+
+        <div id="copy-message">✔️ Password Copied!</div>
+    </div>
+
+    <script>
+        // Character sets
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numbers = '0123456789';
+        const symbols = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+        // Generate Password
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const includeLowercase = document.getElementById('include-lowercase').checked;
+            const includeUppercase = document.getElementById('include-uppercase').checked;
+            const includeNumbers = document.getElementById('include-numbers').checked;
+            const includeSymbols = document.getElementById('include-symbols').checked;
+
+            let charSet = '';
+            if (includeLowercase) charSet += lowercase;
+            if (includeUppercase) charSet += uppercase;
+            if (includeNumbers) charSet += numbers;
+            if (includeSymbols) charSet += symbols;
+
+            if (charSet === '') {
+                alert('⚠️ Please select at least one character type!');
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charSet.length);
+                password += charSet[randomIndex];
+            }
+
+            document.getElementById('password').value = password;
+        }
+
+        // Copy Password to Clipboard
+        function copyPassword() {
+            const passwordField = document.getElementById('password');
+            if (passwordField.value === '') {
+                alert('⚠️ Generate a password first!');
+                return;
+            }
+
+            passwordField.select();
+            document.execCommand('copy');
+            document.getElementById('copy-message').style.display = 'block';
+
+            // Hide message after 2 seconds
+            setTimeout(() => {
+                document.getElementById('copy-message').style.display = 'none';
+            }, 2000);
+        }
+    </script>
+
+</body>
+
+</html>

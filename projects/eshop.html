@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce with Cart System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #343a40;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 24px;
+        }
+
+        .cart-btn {
+            background: #a7287f;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: #218838;
+        }
+
+        /* Product Container */
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .product-card p {
+            color: #555;
+        }
+
+        .add-btn {
+            background: #ffcc00;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Cart Section */
+        .cart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .cart-container h2 {
+            margin-bottom: 15px;
+        }
+
+        .cart-items {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item h4 {
+            margin: 0;
+        }
+
+        .cart-item p {
+            margin: 0;
+            color: #555;
+        }
+
+        .cart-footer {
+            margin-top: 15px;
+            text-align: right;
+        }
+
+        .checkout-btn,
+        .clear-btn {
+            background: #ffc107;
+            color: #333;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #e0a800;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+        }
+
+
+
+
+        
+        
+/* goback button */
+.goBackBtn {
+            display: flex;
+            right: 10px;
+            background: #5921f3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+}
+
+.goBackBtn:hover {
+    background: #da0b72;
+    transform: translateY(-3px);
+}
+
+
+
+
+        /* Fullscreen Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            display: none;
+        }
+        .popup {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .code-block {
+            background: #0e0b20;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .code-btn {
+            
+            background: #5921f3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .code-btn:hover {
+            background: #da0b72;
+            transform: translateY(-3px);
+        }
+        
+        .copy-btn {
+            background: #ff9800;
+            color: white;
+            margin-left: 10px;
+        }
+        #copy-message {
+            color: #4caf50;
+            margin-top: 10px;
+            display: none;
+        }
+        /* Responsive styles */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  nav button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item img {
+    width: 100px;
+  }
+
+  .cart {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  #code-popup pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+  }
+
+  .popup {
+    width: 95%;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .cart {
+    font-size: 0.9rem;
+  }
+
+  .cart-item {
+    padding: 1rem 0.5rem;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>🛍️ E-Shop</h1>
+        <button class="cart-btn" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+        
+    </div>
+
+  
+ <!-- Fullscreen Overlay -->
+ <div id="overlay" class="overlay">
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">Close</button>
+        <div class="popup-content" id="popup-content"></div>
+    </div>
+</div>
+
+
+
+
+    <!-- Product Section -->
+    <div class="product-container" id="product-container">
+        <!-- Products will be dynamically loaded here -->
+    </div>
+
+    <!-- Cart Section -->
+    <div id="cart-container" class="cart-container" style="display: none;">
+        <h2>🛒 Your Cart</h2>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+        <div class="cart-footer">
+            <h3>Total: $<span id="cart-total">0.00</span></h3>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+            <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+        </div>
+    </div>
+    <div>
+<center>     
+        <button class="goBackBtn" onclick="goBack()"> Go Back</button>
+        <button class="btn code-btn" onclick="event.stopPropagation(); showCodePopup('navbar')">Code</button></center>  
+    </div>
+
+    <script>
+        // Products Data
+        const products = [
+            {
+                id: 1,
+                name: "Smartphone",
+                price: 499.99,
+                image: "../imgs/phone.jpg"
+            },
+            {
+                id: 2,
+                name: "Laptop",
+                price: 899.99,
+                image: "../imgs/laptop.webp"
+            },
+            {
+                id: 3,
+                name: "Headphones",
+                price: 79.99,
+                image: "../imgs/headphone.webp"
+            },
+            {
+                id: 4,
+                name: "Smart Watch",
+                price: 199.99,
+                image: "../imgs/watch.webp"
+            },
+            {
+                id: 5,
+                name: "Printer",
+                price: 999.99,
+                image: "../imgs/printer.jpg"
+            },
+            {
+                id: 6,
+                name: "Refridgerator",
+                price: 29.99,
+                image: "../imgs/refridgerator.avif"
+            },
+            {
+                id: 7,
+                name: "Washing Machine",
+                price: 91.99,
+                image: "../imgs/washing machine.png"
+            },
+            {
+                id: 8,
+                name: "AC",
+                price: 200.99,
+                image: "../imgs/ac.webp"
+            }
+        ];
+
+        // Cart Array
+        let cart = [];
+
+        // Load Products Dynamically
+        const productContainer = document.getElementById("product-container");
+
+        function loadProducts() {
+            products.forEach(product => {
+                productContainer.innerHTML += `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>$${product.price.toFixed(2)}</p>
+                        <button class="add-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Add to Cart
+        function addToCart(id) {
+            const product = products.find(item => item.id === id);
+            const itemInCart = cart.find(item => item.id === id);
+
+            if (itemInCart) {
+                itemInCart.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        // Show/Hide Cart
+        function toggleCart() {
+            const cartContainer = document.getElementById("cart-container");
+            cartContainer.style.display = cartContainer.style.display === "none" ? "block" : "none";
+            displayCartItems();
+        }
+
+        // Display Cart Items
+        function displayCartItems() {
+            const cartItems = document.getElementById("cart-items");
+            cartItems.innerHTML = "";
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `<p>Your cart is empty! 🛒</p>`;
+                document.getElementById("cart-total").innerText = "0.00";
+                document.getElementById("cart-count").innerText = "0";
+                return;
+            }
+
+            cart.forEach(item => {
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <h4>${item.name} x${item.quantity}</h4>
+                        <p>$${(item.price * item.quantity).toFixed(2)}</p>
+                        <button class="clear-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById("cart-total").innerText = calculateTotal().toFixed(2);
+            document.getElementById("cart-count").innerText = cart.length;
+        }
+
+        // Remove from Cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        // Calculate Total Price
+        function calculateTotal() {
+            return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        }
+
+        // Update Cart
+        function updateCart() {
+            displayCartItems();
+        }
+
+        // Clear Cart
+        function clearCart() {
+            cart = [];
+            updateCart();
+            toggleCart();
+        }
+
+        // Checkout Function
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty! 🛒");
+            } else {
+                alert(`🎉 Order placed successfully! Your total is $${calculateTotal().toFixed(2)}`);
+                cart = [];
+                updateCart();
+                toggleCart();
+            }
+        }
+
+        // Load Products on Page Load
+        document.addEventListener("DOMContentLoaded", loadProducts);
+    </script>
+    <script>
+        let codeSnippet = '';
+    
+        // Show Project Info in Fullscreen Overlay
+        function showPopup(title, type) {
+            let content = '';
+            if (type === 'navbar') {
+                content = `
+                    <h2>Project: ${title}</h2>
+                    <nav style="background: #333; padding: 10px;">
+                        <a href="#" style="color: white; margin-right: 10px;">Home</a>
+                        <a href="#" style="color: white; margin-right: 10px;">About</a>
+                        <a href="#" style="color: white;">Contact</a>
+                    </nav>
+                    <p style="margin-top: 20px;">This is a simple navbar project using HTML and CSS.</p>
+                `;
+            }
+            document.getElementById('popup-content').innerHTML = content;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+    
+        // Show Code in Fullscreen Overlay with Copy Button
+        function showCodePopup(type) {
+            if (type === 'navbar') {
+                codeSnippet = `
+                  <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Advanced BMI Calculator</title>
+        <style>
+            /* Global Styles */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Arial', sans-serif;
+            }
+    
+            body {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #1f4037, #99f2c8);
+            }
+    
+            /* Container */
+            .container {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(15px);
+                border-radius: 15px;
+                padding: 30px;
+                width: 400px;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+                text-align: center;
+                color: #fff;
+            }
+    
+            /* Header */
+            h1 {
+                margin-bottom: 20px;
+                font-size: 1.8rem;
+            }
+    
+            /* Form */
+            .bmi-form {
+                margin-bottom: 20px;
+            }
+    
+            label {
+                font-size: 1.1rem;
+                margin-top: 10px;
+                display: block;
+            }
+    
+            input {
+                width: 100%;
+                padding: 12px;
+                margin-top: 8px;
+                border: none;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+                font-size: 1rem;
+                outline: none;
+                transition: all 0.3s ease;
+            }
+    
+            input::placeholder {
+                color: #ccc;
+            }
+    
+            /* Button */
+            button {
+                width: 100%;
+                padding: 12px;
+                margin-top: 15px;
+                background: linear-gradient(135deg, #43e97b, #38f9d7);
+                border: none;
+                border-radius: 8px;
+                color: #fff;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+    
+            button:hover {
+                transform: translateY(-3px);
+                background: linear-gradient(135deg, #38f9d7, #43e97b);
+            }
+    
+            /* Results */
+            .result-container {
+                margin-top: 20px;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+                display: none;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+    
+            .result {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+                color: #fff;
+            }
+    
+            .category {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+    
+            /* BMI Categories Colors */
+            .underweight {
+                color: #ff9800;
+            }
+    
+            .normal {
+                color: #4caf50;
+            }
+    
+            .overweight {
+                color: #ffeb3b;
+            }
+    
+            .obese {
+                color: #f44336;
+            }
+    
+            /* Reset Button */
+            .reset-btn {
+                margin-top: 15px;
+                background: #ff4d4d;
+            }
+    
+            .reset-btn:hover {
+                background: #ff3333;
+                transform: translateY(-3px);
+            }
+    
+            /* Responsive Design */
+            @media (max-width: 500px) {
+                .container {
+                    width: 90%;
+                    padding: 20px;
+                }
+            }
+        </style>
+    </head>
+    
+    <body>
+    
+        <div class="container">
+            <h1>💪 Advanced BMI Calculator</h1>
+            <div class="bmi-form">
+                <label for="weight">Enter Your Weight (kg):</label>
+                <input type="number" id="weight" placeholder="e.g., 70" min="1">
+    
+                <label for="height">Enter Your Height (cm):</label>
+                <input type="number" id="height" placeholder="e.g., 175" min="1">
+    
+                <button onclick="calculateBMI()">Calculate BMI</button>
+            </div>
+    
+            <div class="result-container" id="result-container">
+                <div id="result" class="result">Your BMI will appear here...</div>
+                <div id="category" class="category"></div>
+            </div>
+    
+            <button class="reset-btn" onclick="resetForm()">Reset</button>
+        </div>
+    
+        
+    
+    </body>
+    
+    </html>
+    
+                
+                `;
+            }
+    
+            document.getElementById('popup-content').innerHTML = `
+                <h2>Code for ${type}:</h2>
+                <div class="code-block" id="code-block">${escapeHtml(codeSnippet)}</div>
+                <button class="btn copy-btn" onclick="copyCode()">Copy</button>
+                <div id="copy-message">Code copied successfully!</div>
+            `;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+    
+        // Copy Code to Clipboard
+        function copyCode() {
+            const codeBlock = document.getElementById('code-block');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeSnippet.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            document.getElementById('copy-message').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('copy-message').style.display = 'none';
+            }, 1500);
+        }
+    
+        // Close Popup
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+    
+        // Escape HTML content for safe display in code block
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+    
+    
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+
+</body>
+
+</html>

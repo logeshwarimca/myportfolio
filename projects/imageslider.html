@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider Animation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 70%;
+            height: 450px;
+        }
+        .container img {
+            width: 10%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: all ease-in-out 0.5s;
+        }
+        .container img:hover {
+            width: 30%;
+        }
+        center{
+            color: aliceblue;
+        }
+        @media (max-width: 1024px) {
+  .container {
+    height: 350px;
+    width: 90%;
+  }
+
+  .container img {
+    width: 15%;
+  }
+
+  .container img:hover {
+    width: 35%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+  }
+
+  .container img {
+    width: 80%;
+    height: auto;
+    margin: 5px 0;
+    transition: none;
+  }
+
+  .container img:hover {
+    width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container img {
+    width: 100%;
+  }
+
+  .container img:hover {
+    width: 100%;
+  }
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        
+        <img src="../imgs/peacock.webp" alt="Image 1">
+        <img src="../imgs/sld2.webp" alt="Image 2">
+        <img src="../imgs/sld3.jpg" alt="Image 3">
+        <img src="../imgs/sld4.webp" alt="Image 4">
+        <img src="../imgs/sld5.jpg" alt="Image 5">
+    </div>
+</body>
+</html>

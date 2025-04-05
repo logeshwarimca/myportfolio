@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Chat Application</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #2563eb, #9333ea);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #d0d406e1, #fe4400);
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Chat Box */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f1f1f1;
+        }
+
+        /* Messages */
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .incoming {
+            background: #d5b307;
+            color: #333;
+            align-self: flex-start;
+            border-left: 5px solid #4caf50;
+        }
+
+        .outgoing {
+            background: #060244;
+            color: #fff;
+            align-self: flex-end;
+            border-right: 5px solid #ff9800;
+        }
+
+        /* Typing Animation */
+        .typing {
+            font-style: italic;
+            color: #888;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            background-color: #550334;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #38f9d7, #43e97b);
+        }
+
+        /* Slide-In Animation */
+        @keyframes slideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .chat-container {
+                width: 95%;
+            }
+        }
+
+        
+        
+/* goback button */
+.goBackBtn {
+    
+    background: #2521f3;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+}
+
+.goBackBtn:hover {
+    background: #da0b72;
+    transform: translateY(-3px);
+}
+
+
+
+
+        /* Fullscreen Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            display: none;
+        }
+        .popup {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .code-block {
+            background: #0e0b20;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .code-btn {
+            
+            background: #2521f3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .code-btn:hover {
+            background: #da0b72;
+            transform: translateY(-3px);
+        }
+        
+        .copy-btn {
+            background: #ff9800;
+            color: white;
+            margin-left: 10px;
+        }
+        #copy-message {
+            color: #4caf50;
+            margin-top: 10px;
+            display: none;
+        }
+
+
+
+        /* Responsive Design */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        height: 90vh;
+        flex-direction: column;
+    }
+
+    .chat-header {
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+
+    .chat-box {
+        height: 60vh;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .chat-input-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chat-input-container input {
+        width: 100%;
+    }
+
+    .chat-input-container button {
+        width: 100%;
+    }
+
+    .popup {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .code-block {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    .btn, .copy-btn, .code-btn, .close-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-header {
+        font-size: 1rem;
+    }
+
+    .message {
+        font-size: 0.85rem;
+    }
+
+    .popup h2 {
+        font-size: 1rem;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <!-- Chat Header -->
+           
+            <div class="chat-header"> 💬 Chat Application<button class="btn code-btn" onclick="event.stopPropagation(); showCodePopup('navbar')">Code</button>
+            </div>
+
+<!-- Fullscreen Overlay -->
+<div id="overlay" class="overlay">
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">❌</button>
+        <div class="popup-content" id="popup-content"></div>
+    </div>
+</div>
+
+        <!-- Chat Box -->
+        <div class="chat-box" id="chat-box"></div>
+
+        <!-- Typing Indicator -->
+        <div class="typing" id="typing">User is typing...</div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <input type="text" id="message-input" placeholder="Type your message..." oninput="showTyping()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+   <script>
+            const chatBox = document.getElementById('chat-box');
+        const messageInput = document.getElementById('message-input');
+        const typingIndicator = document.getElementById('typing');
+        let isTyping = false;
+
+        // Show Typing Animation
+        function showTyping() {
+            if (!isTyping) {
+                typingIndicator.style.display = 'block';
+                isTyping = true;
+
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    isTyping = false;
+                }, 1000);
+            }
+        }
+
+        // Send Message
+        function sendMessage() {
+            const message = messageInput.value.trim().toLowerCase(); // Convert to lowercase for case insensitivity
+            if (message === '') {
+                alert('⚠️ Please type a message!');
+                return;
+            }
+
+            // Add User's Message
+            addMessage(message, 'outgoing');
+
+            // Clear Input
+            messageInput.value = '';
+
+            // Simulate Bot Reply
+            setTimeout(() => {
+                showTyping();
+                const botReply = getBotResponse(message);
+                addMessage(botReply, 'incoming');
+            }, 1000);
+        }
+
+        // Get Bot Response Based on User Input
+        function getBotResponse(message) {
+            if (message === 'hi' || message === 'hello') {
+                return '👋 Hi! How can I assist you today?';
+            } 
+            else if (message === 'how are you' || message === 'h r u') {
+                return '😊 I\'m good! How about you?';
+            } 
+            else if (message === 'what is your name') {
+                return '🤖 I am ChatBot, your virtual assistant!';
+            } 
+            else if (message === 'bye' || message === 'goodbye') {
+                return '👋 Goodbye! Have a great day!';
+            }
+            else if (message === 'what can you do') {
+                return '💡 I can chat with you, answer basic questions, and assist with your queries.';
+            }
+            else {
+                // Default response for unknown inputs
+                return '🤔 Sorry, I didn\'t understand that. Can you ask something else?';
+            }
+        }
+
+        // Add Message to Chat Box
+        function addMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = message;
+
+            // Append Message
+            chatBox.appendChild(messageDiv);
+
+            // Auto Scroll to Bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+   </script>
+   <script>
+    let codeSnippet = '';
+
+    // Show Project Info in Fullscreen Overlay
+    function showPopup(title, type) {
+        let content = '';
+        if (type === 'navbar') {
+            content = `
+                <h2>Project: ${title}</h2>
+                <nav style="background: #333; padding: 10px;">
+                    <a href="#" style="color: white; margin-right: 10px;">Home</a>
+                    <a href="#" style="color: white; margin-right: 10px;">About</a>
+                    <a href="#" style="color: white;">Contact</a>
+                </nav>
+                <p style="margin-top: 20px;">This is a simple navbar project using HTML and CSS.</p>
+            `;
+        }
+        document.getElementById('popup-content').innerHTML = content;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Show Code in Fullscreen Overlay with Copy Button
+    function showCodePopup(type) {
+        if (type === 'navbar') {
+            codeSnippet = `
+             <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Chat Application</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Chat Box */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f1f1f1;
+        }
+
+        /* Messages */
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 12px;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .incoming {
+            background: #fff;
+            color: #333;
+            align-self: flex-start;
+            border-left: 5px solid #4caf50;
+        }
+
+        .outgoing {
+            background: #4facfe;
+            color: #fff;
+            align-self: flex-end;
+            border-right: 5px solid #ff9800;
+        }
+
+        /* Typing Animation */
+        .typing {
+            font-style: italic;
+            color: #888;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #38f9d7, #43e97b);
+        }
+
+        /* Slide-In Animation */
+        @keyframes slideIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .chat-container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">💬 Chat Application</div>
+
+        <!-- Chat Box -->
+        <div class="chat-box" id="chat-box"></div>
+
+        <!-- Typing Indicator -->
+        <div class="typing" id="typing">User is typing...</div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <input type="text" id="message-input" placeholder="Type your message..." oninput="showTyping()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+   
+
+</body>
+
+</html>
+
+
+            
+            `;
+        }
+
+        document.getElementById('popup-content').innerHTML = `
+            <h2>Code for ${type}:</h2>
+            <div class="code-block" id="code-block">${escapeHtml(codeSnippet)}</div>
+            <button class="btn copy-btn" onclick="copyCode()">Copy</button>
+            <div id="copy-message">Code copied successfully!</div>
+        `;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Copy Code to Clipboard
+    function copyCode() {
+        const codeBlock = document.getElementById('code-block');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeSnippet.trim();
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        document.getElementById('copy-message').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('copy-message').style.display = 'none';
+        }, 1500);
+    }
+
+    // Close Popup
+    function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Escape HTML content for safe display in code block
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+
+</html>

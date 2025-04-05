@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced BMI Calculator</title>
+    <style>
+        /* Global Styles */
+     /* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+/* Container */
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 30px;
+    width: 400px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    color: #f5f5f5;
+}
+
+/* Header */
+h1 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #f5f5f5;
+}
+
+/* Form */
+.bmi-form {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1.1rem;
+    margin-top: 10px;
+    display: block;
+    color: #f1f1f1;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 8px #64b5f6;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+/* Button */
+.bmi-btn,
+.reset-btn,
+.goBackBtn,
+.code-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bmi-btn {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: #fff;
+}
+
+.bmi-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #38f9d7, #43e97b);
+}
+
+/* Reset Button */
+.reset-btn {
+    background: linear-gradient(135deg, #e57373, #f44336);
+    color: #fff;
+}
+
+.reset-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #ff6f61, #e53935);
+}
+
+/* Go Back Button */
+.goBackBtn {
+    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    color: white;
+}
+
+.goBackBtn:hover {
+    background: linear-gradient(135deg, #5c6bc0, #3f51b5);
+    transform: translateY(-3px);
+}
+
+/* Code Button */
+.code-btn {
+    background: linear-gradient(135deg, #2196f3, #42a5f5);
+    color: white;
+}
+
+.code-btn:hover {
+    background: linear-gradient(135deg, #64b5f6, #2196f3);
+    transform: translateY(-3px);
+}
+
+/* Results */
+.result-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.result {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.category {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* BMI Categories Colors */
+.underweight {
+    color: #ff9800;
+}
+
+.normal {
+    color: #4caf50;
+}
+
+.overweight {
+    color: #ffeb3b;
+}
+
+.obese {
+    color: #f44336;
+}
+
+/* Fullscreen Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    display: none;
+}
+
+.popup {
+    background: #0e0b20;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 80%;
+    max-width: 700px;
+    position: relative;
+    color: #f5f5f5;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #e53935;
+}
+
+/* Code Block */
+.code-block {
+    background: #1f1f1f;
+    color: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+/* Copy Button */
+.copy-btn {
+    background: linear-gradient(135deg, #ff9800, #ffb74d);
+    color: white;
+    margin-left: 10px;
+}
+
+.copy-btn:hover {
+    background: linear-gradient(135deg, #ffb74d, #ff9800);
+}
+
+/* Copy Message */
+#copy-message {
+    color: #4caf50;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .popup {
+        width: 95%;
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .bmi-form label,
+    .bmi-form input,
+    .bmi-btn,
+    .reset-btn,
+    .code-btn,
+    .goBackBtn {
+        font-size: 1rem;
+    }
+
+    .popup {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .popup h2 {
+        font-size: 1.2rem;
+    }
+
+    .code-block {
+        font-size: 0.8rem;
+        max-height: 300px;
+    }
+
+    .close-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .result {
+        font-size: 1.2rem;
+    }
+
+    .category {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .bmi-btn,
+    .reset-btn,
+    .code-btn,
+    .goBackBtn {
+        padding: 10px;
+    }
+
+    .result-container {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .popup {
+        padding: 15px;
+    }
+
+    .code-block {
+        padding: 10px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>💪 Advanced BMI Calculator</h1>
+        <div class="bmi-form">
+            <label for="weight">Enter Your Weight (kg):</label>
+            <input type="number" id="weight" placeholder="e.g., 70" min="1">
+
+            <label for="height">Enter Your Height (cm):</label>
+            <input type="number" id="height" placeholder="e.g., 175" min="1">
+
+            <button class="bmi-btn" onclick="calculateBMI()">Calculate BMI</button>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <div id="result" class="result">Your BMI will appear here...</div>
+            <div id="category" class="category"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetForm()">Reset</button>
+        <div>
+           
+            <button class="btn code-btn" onclick="event.stopPropagation(); showCodePopup('navbar')">Code</button>
+       
+
+        </div>
+    </div>
+
+    
+ <!-- Fullscreen Overlay -->
+ <div id="overlay" class="overlay">
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">Close</button>
+        <div class="popup-content" id="popup-content"></div>
+    </div>
+</div>
+
+    <script>
+        // Calculate BMI and Show Result
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (!weight || !height || weight <= 0 || height <= 0) {
+                alert('⚠️ Please enter valid positive values for weight and height.');
+                return;
+            }
+
+            // BMI Calculation Formula
+            const heightInMeters = height / 100;
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+
+            // Get Result Elements
+            const resultContainer = document.getElementById('result-container');
+            const result = document.getElementById('result');
+            const category = document.getElementById('category');
+
+            // Display BMI and Category
+            result.innerHTML = `Your BMI: <strong>${bmi}</strong>`;
+            resultContainer.style.display = 'block';
+            setTimeout(() => resultContainer.style.opacity = '1', 100);
+
+            // Determine BMI Category
+            if (bmi < 18.5) {
+                category.innerHTML = `⚠️ Underweight!`;
+                category.className = 'category underweight';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category.innerHTML = `✅ Normal Weight!`;
+                category.className = 'category normal';
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category.innerHTML = `⚠️ Overweight!`;
+                category.className = 'category overweight';
+            } else {
+                category.innerHTML = `⚠️ Obese!`;
+                category.className = 'category obese';
+            }
+        }
+
+        // Reset Form and Results
+        function resetForm() {
+            document.getElementById('weight').value = '';
+            document.getElementById('height').value = '';
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.style.opacity = '0';
+            setTimeout(() => {
+                resultContainer.style.display = 'none';
+            }, 300);
+        }
+    </script>
+<script>
+    let codeSnippet = '';
+
+    // Show Project Info in Fullscreen Overlay
+    function showPopup(title, type) {
+        let content = '';
+        if (type === 'navbar') {
+            content = `
+                <h2>Project: ${title}</h2>
+                <nav style="background: #333; padding: 10px;">
+                    <a href="#" style="color: white; margin-right: 10px;">Home</a>
+                    <a href="#" style="color: white; margin-right: 10px;">About</a>
+                    <a href="#" style="color: white;">Contact</a>
+                </nav>
+                <p style="margin-top: 20px;">This is a simple navbar project using HTML and CSS.</p>
+            `;
+        }
+        document.getElementById('popup-content').innerHTML = content;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Show Code in Fullscreen Overlay with Copy Button
+    function showCodePopup(type) {
+        if (type === 'navbar') {
+            codeSnippet = `
+              <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced BMI Calculator</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1f4037, #99f2c8);
+        }
+
+        /* Container */
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: #fff;
+        }
+
+        /* Header */
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        /* Form */
+        .bmi-form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #38f9d7, #43e97b);
+        }
+
+        /* Results */
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .result {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .category {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* BMI Categories Colors */
+        .underweight {
+            color: #ff9800;
+        }
+
+        .normal {
+            color: #4caf50;
+        }
+
+        .overweight {
+            color: #ffeb3b;
+        }
+
+        .obese {
+            color: #f44336;
+        }
+
+        /* Reset Button */
+        .reset-btn {
+            margin-top: 15px;
+            background: #ff4d4d;
+        }
+
+        .reset-btn:hover {
+            background: #ff3333;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>💪 Advanced BMI Calculator</h1>
+        <div class="bmi-form">
+            <label for="weight">Enter Your Weight (kg):</label>
+            <input type="number" id="weight" placeholder="e.g., 70" min="1">
+
+            <label for="height">Enter Your Height (cm):</label>
+            <input type="number" id="height" placeholder="e.g., 175" min="1">
+
+            <button onclick="calculateBMI()">Calculate BMI</button>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <div id="result" class="result">Your BMI will appear here...</div>
+            <div id="category" class="category"></div>
+        </div>
+
+        <button class="reset-btn" onclick="resetForm()">Reset</button>
+    </div>
+
+    
+
+</body>
+
+</html>
+
+            
+            `;
+        }
+
+        document.getElementById('popup-content').innerHTML = `
+            <h2>Code for ${type}:</h2>
+            <div class="code-block" id="code-block">${escapeHtml(codeSnippet)}</div>
+            <button class="btn copy-btn" onclick="copyCode()">Copy</button>
+            <div id="copy-message">Code copied successfully!</div>
+        `;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Copy Code to Clipboard
+    function copyCode() {
+        const codeBlock = document.getElementById('code-block');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeSnippet.trim();
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        document.getElementById('copy-message').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('copy-message').style.display = 'none';
+        }, 1500);
+    }
+
+    // Close Popup
+    function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Escape HTML content for safe display in code block
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+
+
+   
+</body>
+
+</html>

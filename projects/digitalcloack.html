@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .clock-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 400px;
+        }
+
+        .clock {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .date {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #f0f0f0;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(to right, #43e97b, #38f9d7);
+            transform: translateY(-3px);
+        }
+
+        .shadow-effect {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px #4facfe, 0 0 20px #00f2fe;
+            }
+
+            100% {
+                text-shadow: 0 0 20px #4facfe, 0 0 40px #00f2fe;
+            }
+        }
+
+
+/* goback button */
+.goBackBtn {
+    
+    background: #2196f3;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+}
+
+.goBackBtn:hover {
+    background: #da0b72;
+    transform: translateY(-3px);
+}
+
+
+
+
+        /* Fullscreen Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            display: none;
+        }
+        .popup {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .code-block {
+            background: #0e0b20;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .code-btn {
+            
+            background: #2196f3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .code-btn:hover {
+            background: #da0b72;
+            transform: translateY(-3px);
+        }
+        
+        .copy-btn {
+            background: #ff9800;
+            color: white;
+            margin-left: 10px;
+        }
+        #copy-message {
+            color: #4caf50;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Responsive Styles */
+@media (max-width: 768px) {
+    .clock-container {
+        width: 90%;
+        padding: 30px;
+    }
+
+    .clock {
+        font-size: 2.5rem;
+    }
+
+    .date {
+        font-size: 1rem;
+    }
+
+    .toggle-btn,
+    .goBackBtn,
+    .code-btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    .popup {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .code-block {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .clock {
+        font-size: 2rem;
+    }
+
+    .date {
+        font-size: 0.9rem;
+    }
+
+    .toggle-btn,
+    .goBackBtn,
+    .code-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .code-block {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    .popup {
+        max-width: 95%;
+        padding: 15px;
+    }
+
+    .close-btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}
+
+    </style>
+</head>
+<body>
+   
+    
+
+
+    <!-- digital clock project -->
+    <div class="clock-container">
+        <div id="clock" class="clock shadow-effect">00:00:00</div>
+        <div id="date" class="date">Monday, 01 January 2025</div>
+        <div class="btn-container">
+            <button class="toggle-btn" onclick="toggleFormat()">Toggle 12/24 Hour Format</button>
+        </div>
+        <div>
+            <button class="goBackBtn" onclick="goBack()"> Go Back</button>
+            <button class="btn code-btn" onclick="event.stopPropagation(); showCodePopup('navbar')">Code</button>
+       
+
+        </div>
+    </div>
+
+
+
+
+
+
+ <!-- Fullscreen Overlay -->
+ <div id="overlay" class="overlay">
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">Close</button>
+        <div class="popup-content" id="popup-content"></div>
+    </div>
+</div>
+
+<script>
+    let codeSnippet = '';
+
+    // Show Project Info in Fullscreen Overlay
+    function showPopup(title, type) {
+        let content = '';
+        if (type === 'navbar') {
+            content = `
+                <h2>Project: ${title}</h2>
+                <nav style="background: #333; padding: 10px;">
+                    <a href="#" style="color: white; margin-right: 10px;">Home</a>
+                    <a href="#" style="color: white; margin-right: 10px;">About</a>
+                    <a href="#" style="color: white;">Contact</a>
+                </nav>
+                <p style="margin-top: 20px;">This is a simple navbar project using HTML and CSS.</p>
+            `;
+        }
+        document.getElementById('popup-content').innerHTML = content;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Show Code in Fullscreen Overlay with Copy Button
+    function showCodePopup(type) {
+        if (type === 'navbar') {
+            codeSnippet = `
+              <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Digital Clock</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .clock-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 400px;
+        }
+
+        .clock {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .date {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #f0f0f0;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(to right, #43e97b, #38f9d7);
+            transform: translateY(-3px);
+        }
+
+        .shadow-effect {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px #4facfe, 0 0 20px #00f2fe;
+            }
+
+            100% {
+                text-shadow: 0 0 20px #4facfe, 0 0 40px #00f2fe;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="clock-container">
+        <div id="clock" class="clock shadow-effect">00:00:00</div>
+        <div id="date" class="date">Monday, 01 January 2025</div>
+        <div class="btn-container">
+            <button class="toggle-btn" onclick="toggleFormat()">Toggle 12/24 Hour Format</button>
+        </div>
+    </div>
+</body>
+
+</html>
+            
+            `;
+        }
+
+        document.getElementById('popup-content').innerHTML = `
+            <h2>Code for ${type}:</h2>
+            <div class="code-block" id="code-block">${escapeHtml(codeSnippet)}</div>
+            <button class="btn copy-btn" onclick="copyCode()">Copy</button>
+            <div id="copy-message">Code copied successfully!</div>
+        `;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    // Copy Code to Clipboard
+    function copyCode() {
+        const codeBlock = document.getElementById('code-block');
+        const textArea = document.createElement('textarea');
+        textArea.value = codeSnippet.trim();
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        document.getElementById('copy-message').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('copy-message').style.display = 'none';
+        }, 1500);
+    }
+
+    // Close Popup
+    function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Escape HTML content for safe display in code block
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <script>
+        // digital clock project
+
+        let is24HourFormat = true;
+
+        // Update Clock Every Second
+        function updateClock() {
+            const now = new Date();
+
+            // Get Time Components
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            // 12-Hour Format Logic
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            if (!is24HourFormat) {
+                hours = hours % 12 || 12;
+            }
+
+            // Format Time
+            const time = `${formatZero(hours)}:${formatZero(minutes)}:${formatZero(seconds)}${!is24HourFormat ? ' ' + ampm : ''}`;
+
+            // Get Date Components
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const day = dayNames[now.getDay()];
+            const date = now.getDate();
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+            const fullDate = `${day}, ${formatZero(date)} ${month} ${year}`;
+
+            // Update DOM
+            document.getElementById('clock').innerHTML = time;
+            document.getElementById('date').innerHTML = fullDate;
+        }
+
+        // Add Leading Zero to Single Digit Numbers
+        function formatZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        // Toggle Between 12-Hour and 24-Hour Formats
+        function toggleFormat() {
+            is24HourFormat = !is24HourFormat;
+            updateClock();
+        }
+
+        // Initial Call and Update Every Second
+        setInterval(updateClock, 1000);
+        updateClock();
+ 
+    </script>
+</body>
+</html>
