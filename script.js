@@ -2,7 +2,7 @@
 // Initialize Particles
 particlesJS("particles-js", {
     "particles": {
-        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+        "number": { "value": 150, "density": { "enable": true, "value_area": 800 } },
         "color": { "value": "#383838" },
         "shape": { "type": "circle" },
         "opacity": { "value": 1.5 },

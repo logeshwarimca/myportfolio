@@ -11,8 +11,24 @@ body {
 #particles-js {
     position: absolute;
     width: 100%;
-    /* height: 100%; */
+    height: 660px;
 }
+/* Responsive particles background */
+
+
+@media (max-width: 576px) {
+  .count-particles {
+    font-size: 12px;
+    padding: 4px 8px;
+    top: 8px;
+    right: 8px;
+  }
+}
+
+
+
+
+
 a{
     text-decoration: none;
 }
@@ -303,7 +319,11 @@ a{
 }
 
 /* home responsive */
-
+@media (max-width: 768px) {
+  #particles-js {
+    height:700px;
+  }
+}
 /* Responsive for tablets and below */
 @media (max-width: 1024px) {
     .home {
@@ -698,8 +718,6 @@ a{
   }
 
   .timeline-item {
-
-
     background: #1a1a2e;
     padding: 20px;
     border-radius: 10px;
